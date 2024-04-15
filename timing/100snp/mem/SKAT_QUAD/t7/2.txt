@@ -1,0 +1,16 @@
+Filename: /home/aakarsh/window_size_testing/time_compare2.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    40    150.1 MiB    150.1 MiB           1   @profile
+    41                                         def skat(geno_matrix_in):
+    42    150.1 MiB      0.0 MiB           1       start = time.time()
+    43                                         
+    44    636.7 MiB    486.6 MiB           1       skat = polynomial_kernel(geno_matrix_in, degree=2)
+    45    658.7 MiB     22.0 MiB           1       skat_svd = np.linalg.svd(skat, full_matrices=False, compute_uv=False)
+    46                                         
+    47    658.7 MiB      0.0 MiB           1       end = time.time()
+    48    658.7 MiB      0.0 MiB           1       skat_time = end - start
+    49    658.7 MiB      0.0 MiB           1       return skat_time
+
+

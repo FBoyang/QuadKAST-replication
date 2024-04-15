@@ -1,0 +1,25 @@
+Filename: /home/aakarsh/window_size_testing/time_compare3.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   134    395.2 MiB    395.2 MiB           1   @profile
+   135                                         def direct(geno_matrix_in):
+   136                                             
+   137    395.2 MiB      0.0 MiB           1       exact = np.zeros((N, int((M*(M+1))/2)))
+   138                                         
+   139    395.2 MiB      0.0 MiB           1       start = time.time()
+   140                                         
+   141    395.2 MiB      0.0 MiB           1       s = 0
+   142  11617.5 MiB      0.0 MiB         101       for i in range(M):
+   143  11617.5 MiB      0.0 MiB        5050           for j in range(i+1, M):
+   144  11617.5 MiB      0.0 MiB        4950               feature = geno_matrix_in[:,i]*geno_matrix_in[:,j]
+   145  11617.5 MiB  11222.3 MiB        4950               exact[:,s] = feature
+   146  11617.5 MiB      0.0 MiB        4950               s += 1
+   147                                         
+   148  11711.8 MiB     94.3 MiB           1       exact_svd = np.linalg.svd(exact, full_matrices=False, compute_uv=False)
+   149                                         
+   150  11711.8 MiB      0.0 MiB           1       end = time.time()
+   151  11711.8 MiB      0.0 MiB           1       exact_time = end - start
+   152  11711.8 MiB      0.0 MiB           1       return exact_time
+
+
