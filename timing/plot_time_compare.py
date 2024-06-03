@@ -23,11 +23,12 @@ for k in Kernels:
         times.append(0)
         mems.append(0)
 
-basedir = f"{M}snp/"
+basedir = f"/u/home/a/aanand2/QuadKAST-replication/timing/{M}snp/"
 trials = 10
 for k in Kernels:
     for t in range(1, trials+1):
         timedir = basedir + "time/" + k + "/t" + str(t) + "/"
+        print(timedir)
         if (not os.path.isdir(timedir)):
             continue
         for filename in os.listdir(timedir):
@@ -92,3 +93,15 @@ plt.subplots_adjust(bottom=0.17)
 #plt.subplots_adjust(left=0.15)
 # plt.savefig("plots/mem_compr_m100.png", dpi=200)
 #%%
+new_df = df[df["Kernel"]=="DIRECT"][1:]
+
+new_df['Time (hrs)'] = new_df['Time (hrs)'] * 60
+# Group by 'Sample Size' and collect 'Time (hrs)' into lists
+grouped = new_df.groupby('Sample Size')['Time (hrs)'].apply(list).reset_index()
+
+# Expand lists into separate columns (Trial 1 to Trial 10)
+expanded = pd.DataFrame(grouped['Time (hrs)'].tolist(), index=grouped['Sample Size'])
+expanded.columns = [f'Trial {i+1}' for i in range(expanded.shape[1])]
+#%%
+expanded.to_csv("/u/home/a/aanand2/QuadKAST-replication/timing/runtimes_sample.csv")
+# %%
