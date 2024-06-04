@@ -143,5 +143,5 @@ results_df.index.name = 'Window Size'
 results_df.reset_index(inplace=True)
 results_df['Window Size'] = [10, 50, 100, 200, 300, 500]
 # %%
-results_df.to_csv("runtimes_snp.csv")
+results_df.to_csv("runtimes_snp.csv", index=False)
 # %%
