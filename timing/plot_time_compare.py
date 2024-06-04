@@ -144,4 +144,22 @@ results_df.reset_index(inplace=True)
 results_df['Window Size'] = [10, 50, 100, 200, 300, 500]
 # %%
 results_df.to_csv("runtimes_snp.csv", index=False)
+#%%
+results_df["avg"] = results_df.mean(axis=1)
+results_df["std"] = results_df.std(axis=1)
+# %%
+import matplotlib.pyplot as plt
+import numpy as np
+#%%
+f, ax = plt.subplots(figsize=(6, 6))
+ax.tick_params(axis='x', which='major')
+plt.errorbar([0, 1, 2, 3, 4, 5], results_df['avg'], yerr=results_df["std"]/np.sqrt(10), linestyle='-', marker='o', markersize=10, label="QuadKAST")
+plt.xticks(ticks=[0, 1, 2, 3, 4, 5], labels=results_df["Window Size"])
+
+plt.ylabel("Time (min)", size = 17)
+plt.xlabel("Window Size", size = 17)
+plt.xticks(fontsize=17)
+plt.yticks(fontsize=17)
+plt.legend(fontsize=17,markerscale=1.,loc='upper left')
+plt.savefig("runtimes_snp.png", dpi=200)
 # %%
