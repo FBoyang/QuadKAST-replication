@@ -105,3 +105,43 @@ expanded.columns = [f'Trial {i+1}' for i in range(expanded.shape[1])]
 #%%
 expanded.to_csv("/u/home/a/aanand2/QuadKAST-replication/timing/runtimes_sample.csv")
 # %%
+## SNP TEST ##
+# %%
+import os
+import pandas as pd
+#%%
+# Define the directory containing the data
+data_directory = '/u/home/a/aanand2/QuadKAST-replication/timing/50000n'
+
+# Initialize an empty DataFrame to store the results
+results_df = pd.DataFrame(columns=[10, 50, 100, 200, 300, 500])
+#%%
+# Loop through the trial folders (t1 to t10)
+for trial_folder in range(1, 11):
+    trial_folder_path = os.path.join(data_directory, f't{trial_folder}')
+    
+    # Initialize a list to store the results for the current trial
+    trial_results = []
+    
+    # Loop through the setting files (1.txt to 6.txt)
+    for setting_file in range(1, 7):
+        setting_file_path = os.path.join(trial_folder_path, f'{setting_file}.txt')
+        
+        # Read the number from the file and append it to the trial results list
+        with open(setting_file_path, 'r') as file:
+            number = float(file.read().strip())
+            trial_results.append(number/60)
+    
+    # Append the trial results to the results DataFrame with the trial number as the index
+    results_df.loc[f'Trial {trial_folder}'] = trial_results
+
+# Transpose the DataFrame to have the settings as columns and trials as rows
+results_df = results_df.transpose()
+#%%
+# Rename the index and reset it to start from 10
+results_df.index.name = 'Window Size'
+results_df.reset_index(inplace=True)
+results_df['Window Size'] = [10, 50, 100, 200, 300, 500]
+# %%
+results_df.to_csv("runtimes_snp.csv")
+# %%
