@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 #%%
 M = 100
 N = [0, 5000, 10000, 20000, 50000, 100000, 200000, 291273]
@@ -15,6 +16,14 @@ kernel = []
 times = []
 mems = []
 
+
+# def quad_line(x, a, b, c):
+#     return a * x *x  + b*x + c
+
+def quad_line(x, a, b, c, d, e):
+    return a * x**4 + b*x**3 + c*x**2  + d*x + e
+
+#%%
 for k in Kernels:
     for w in Windows:
         sample_sizes.append(0)
@@ -23,7 +32,7 @@ for k in Kernels:
         times.append(0)
         mems.append(0)
 
-basedir = f"/u/home/a/aanand2/QuadKAST-replication/timing/{M}snp/"
+basedir = f"{M}snp/"
 trials = 10
 for k in Kernels:
     for t in range(1, trials+1):
@@ -52,18 +61,25 @@ for k in Kernels:
 
 d = {"Sample Size" : sample_sizes, "Window Size" : window_sizes, "Kernel" : kernel, "Time (hrs)" : times, "Memory (MiB)" : mems}
 df = pd.DataFrame(d)
-
-time_df = df.groupby(["Sample Size", "Kernel"])["Time (hrs)"].mean().reset_index(name='Time (hrs)')
-time_df_std = df.groupby(["Sample Size", "Kernel"])["Time (hrs)"].std().reset_index(name='std')
+df["Time (mins)"]  = df["Time (hrs)"] * 60
+time_df = df.groupby(["Sample Size", "Kernel"])["Time (mins)"].mean().reset_index(name='Time (mins)')
+time_df_std = df.groupby(["Sample Size", "Kernel"])["Time (mins)"].std().reset_index(name='std')
 time_df_std["std"] = time_df_std["std"]/np.sqrt(10)
 time_df["std"] = time_df_std["std"]
 time_df.fillna(0, inplace=True)
+
+time_df_disp = time_df[time_df['Sample Size']>0].sort_values(by=['Kernel','Sample Size'])
+time_df_disp.loc[time_df_disp['Kernel'].duplicated(), 'Kernel'] = ""
+
 
 mem_df = df.groupby(["Sample Size", "Kernel"])["Memory (MiB)"].mean().reset_index(name='Memory (MiB)')
 mem_df_std = df.groupby(["Sample Size", "Kernel"])["Memory (MiB)"].std().reset_index(name='std')
 mem_df_std["std"] = mem_df_std["std"]/np.sqrt(10)
 mem_df["std"] = mem_df_std["std"]
 mem_df.fillna(0, inplace=True)
+
+
+
 # print(time_df)
 # print(mem_df)
 #%%
@@ -103,7 +119,7 @@ grouped = new_df.groupby('Sample Size')['Time (hrs)'].apply(list).reset_index()
 expanded = pd.DataFrame(grouped['Time (hrs)'].tolist(), index=grouped['Sample Size'])
 expanded.columns = [f'Trial {i+1}' for i in range(expanded.shape[1])]
 #%%
-expanded.to_csv("/u/home/a/aanand2/QuadKAST-replication/timing/runtimes_sample.csv")
+expanded.to_csv("runtimes_sample.csv")
 # %%
 ## SNP TEST ##
 # %%
@@ -111,7 +127,7 @@ import os
 import pandas as pd
 #%%
 # Define the directory containing the data
-data_directory = '/u/home/a/aanand2/QuadKAST-replication/timing/50000n'
+data_directory = '50000n'
 
 # Initialize an empty DataFrame to store the results
 results_df = pd.DataFrame(columns=[10, 50, 100, 200, 300, 500])
@@ -145,21 +161,28 @@ results_df['Window Size'] = [10, 50, 100, 200, 300, 500]
 # %%
 results_df.to_csv("runtimes_snp.csv", index=False)
 #%%
-results_df["avg"] = results_df.mean(axis=1)
-results_df["std"] = results_df.std(axis=1)
+results_df["avg"] = results_df.iloc[:,1:].mean(axis=1)
+results_df["std"] = results_df.iloc[:,1:].std(axis=1)
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
 #%%
-f, ax = plt.subplots(figsize=(6, 6))
+f, ax = plt.subplots(figsize=(6, 3.5))
 ax.tick_params(axis='x', which='major')
-plt.errorbar([0, 1, 2, 3, 4, 5], results_df['avg'], yerr=results_df["std"]/np.sqrt(10), linestyle='-', marker='o', markersize=10, label="QuadKAST")
-plt.xticks(ticks=[0, 1, 2, 3, 4, 5], labels=results_df["Window Size"])
 
-plt.ylabel("Time (min)", size = 17)
-plt.xlabel("Window Size", size = 17)
-plt.xticks(fontsize=17)
-plt.yticks(fontsize=17)
-plt.legend(fontsize=17,markerscale=1.,loc='upper left')
-plt.savefig("runtimes_snp.png", dpi=200)
+xfine = np.linspace(10, 300)
+tmp = curve_fit(quad_line, results_df['Window Size'], results_df['avg'])[0]
+
+plt.errorbar(results_df['Window Size'][:-1], results_df['avg'][:-1], yerr=results_df["std"][:-1]/np.sqrt(10), linestyle='-', marker='o', markersize=7, label="QuadKAST")
+# plt.plot(xfine, quad_line(xfine, tmp[0], tmp[1], tmp[2],  tmp[3],  tmp[4],), '--', linewidth=2)
+
+
+# plt.xticks(ticks=[0, 1, 2, 3, 4, 5], labels=results_df["Window Size"])
+
+plt.ylabel("Time (min)", size = 14)
+plt.xlabel("Window Size", size = 14)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.legend(fontsize=13,markerscale=2.,loc='upper left')
+plt.savefig("runtimes_snp.png", dpi=200, bbox_inches='tight')
 # %%
