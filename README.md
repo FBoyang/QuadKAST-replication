@@ -4,3 +4,4 @@ Scripts needed to replicate the [QuadKAST](https://github.com/sriramlab/FastKAST
 
 var_comp: Simulation experiments related to the variance component analysis
 ukbb_stats: Statistics related to UKBiobank real trait analysis
+timing: Time/ memory complexity analysis of QuadKAST
