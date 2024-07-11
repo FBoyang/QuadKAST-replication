@@ -1,6 +1,7 @@
-We provide two examples of trait simulators:
-1. base simulation: simulate under standard noninfinitesimal additive genetic architecture
-2. large_hid_mar: base simulation + simulate large effect on the imputed data
-3. het_noise: base simulation + heteroskedastic noise
+base simulation: simulate under standard noninfinitesimal additive genetic architecture
 
-Considering privacy issue, we do not provide the actual genotype data used for this simulation
+Based on the base simulation, we add additional genetic archtectures as following:
+1. large_hid_mar: base simulation + simulate large effect on the imputed data
+2. het_noise: base simulation + heteroskedastic noise
+
+Considering privacy issue, we do not provide the plink formatted genotype data used for these simulations.
