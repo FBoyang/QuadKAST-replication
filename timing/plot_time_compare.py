@@ -83,18 +83,18 @@ mem_df.fillna(0, inplace=True)
 # print(time_df)
 # print(mem_df)
 #%%
-f, ax = plt.subplots(figsize=(8, 10), facecolor="w", edgecolor="xkcd:grey")
-plt.plot(time_df[time_df["Kernel"] == "SKAT_QUAD"]["Sample Size"]/1000, time_df[time_df["Kernel"] == "SKAT_QUAD"]["Time (hrs)"], label="SKAT_QUAD", marker='o', markersize=10, linewidth=4, color='blue')
-plt.plot(time_df[time_df["Kernel"] == "DIRECT"]["Sample Size"]/1000, time_df[time_df["Kernel"] == "DIRECT"]["Time (hrs)"], label="QuadKAST", marker='^', markersize=10, linewidth=4, color='red')
+f, ax = plt.subplots(figsize=(6, 3.5),dpi=200, facecolor="w", edgecolor="xkcd:grey")
+plt.plot(time_df[time_df["Kernel"] == "SKAT_QUAD"]["Sample Size"]/1000, time_df[time_df["Kernel"] == "SKAT_QUAD"]["Time (mins)"], label="SKAT_QUAD", marker='o')
+plt.plot(time_df[time_df["Kernel"] == "DIRECT"]["Sample Size"]/1000, time_df[time_df["Kernel"] == "DIRECT"]["Time (mins)"], label="QuadKAST", marker='^')
 #plt.xlabel("Sample Size (k)", size=14)
-#plt.ylabel("Time (hrs)", size=14)
+plt.ylabel("Time (mins)", size=14)
 #plt.title("Time (M = 100)", size=25)
-plt.xticks(fontsize=30, weight=750)
-plt.yticks(fontsize=30, weight=750)
-plt.legend(prop={'size': 30, 'weight' : 750},markerscale=2.,loc='upper right')
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.legend(prop={'size': 13},markerscale=2.,loc='upper right')
 plt.subplots_adjust(bottom=0.17)
 #plt.subplots_adjust(left=0.15)
-# plt.savefig("plots/time_compr_m100.png", dpi=200)
+plt.savefig("plots/time_compr_m100.png", dpi=200)
 #%%
 f, ax = plt.subplots(figsize=(6, 3.5), facecolor="w", edgecolor="k")
 plt.plot(mem_df[mem_df["Kernel"] == "SKAT_QUAD"]["Sample Size"]/1000, mem_df[mem_df["Kernel"] == "SKAT_QUAD"]["Memory (MiB)"]/953.7, label="SKAT_QUAD", marker='o')
@@ -111,12 +111,12 @@ plt.subplots_adjust(bottom=0.17)
 #%%
 new_df = df[df["Kernel"]=="DIRECT"][1:]
 
-new_df['Time (hrs)'] = new_df['Time (hrs)'] * 60
+new_df['Time (mins)'] = new_df['Time (hrs)'] * 60
 # Group by 'Sample Size' and collect 'Time (hrs)' into lists
-grouped = new_df.groupby('Sample Size')['Time (hrs)'].apply(list).reset_index()
+grouped = new_df.groupby('Sample Size')['Time (mins)'].apply(list).reset_index()
 
 # Expand lists into separate columns (Trial 1 to Trial 10)
-expanded = pd.DataFrame(grouped['Time (hrs)'].tolist(), index=grouped['Sample Size'])
+expanded = pd.DataFrame(grouped['Time (mins)'].tolist(), index=grouped['Sample Size'])
 expanded.columns = [f'Trial {i+1}' for i in range(expanded.shape[1])]
 #%%
 expanded.to_csv("runtimes_sample.csv")
