@@ -8,7 +8,6 @@ apo_b
 asp_at
 basal_metabolic
 bilirubin_direct
-bilirubin_total
 blood_eosinophil
 blood_lymphocyte
 blood_monocyte
