@@ -1,0 +1,42 @@
+Analysis1
+1. Read the important SNPs
+2. Superwindow removal
+3. Variance component estimation 
+4. OLS on the pairwise-interaction and get the coefficient and p-values
+
+
+Analysis1.5
+1. Read the important SNPs
+2. Superwindow removal
+3. Variance component estimation 
+4. OLS on the pairwise-interaction and get the coefficient and p-values
+5. Bayesian Posterior on the pairwise-interaction and get coefficietn and p-values
+
+
+Analysis2:
+1. 10KB upstream and downstream for each gene --> same analysis as analysis 1 
+
+
+Analysis3:
+1. Comparison between main variance component and the quad-effect
+
+
+Analysis 4:
+Run the same experiments with 40 PC removal
+
+Analysis 5: 
+Run the same experiments on the imputed genotype data
+
+Analysis 6:
+Imputed data has features too correlated. Maybe should try including the linear effect
+
+
+
+### May 20th, 2024 ###
+Analysis 5.5
+Run the same experiments on the imputed genotype data -- with high VIF feature removal
+
+
+### Jun 3rd, 2024 ###
+sub1.5.v2.sh: fixed the bug on matrix index shuffling issue
+quadkast_sig_genes.v2.csv: Prateek additionally detected signals for billirubin_total 
